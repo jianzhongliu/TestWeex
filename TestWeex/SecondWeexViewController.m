@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    self.view.backgroundColor = [UIColor whiteColor];
     _instance = [[WXSDKInstance alloc] init];
     _instance.viewController = self;
     _instance.frame = self.view.frame;
@@ -39,7 +39,7 @@
         NSLog(@"%@",view);
         //process renderFinish
     };
-    NSURL *url = [NSURL URLWithString:self.url];
+    NSURL *url = [NSURL URLWithString:@"http://192.168.199.141:8081/1.we"];
     [_instance renderWithURL:url options:@{@"bundleUrl":[url absoluteString]} data:nil];
 
 }
