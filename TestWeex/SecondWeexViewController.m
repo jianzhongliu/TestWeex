@@ -51,7 +51,7 @@
         NSLog(@"%@",view);
         //process renderFinish
     };
-    NSURL *url = [NSURL URLWithString:@"http://192.168.199.141:12580/dist/lLogin/index.js"];
+    NSURL *url = [NSURL URLWithString:self.url];
     [_instance renderWithURL:url options:@{@"bundleUrl":[url absoluteString]} data:nil];
 
 }
