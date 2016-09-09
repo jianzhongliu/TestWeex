@@ -9,7 +9,7 @@
 #import "SecondWeexViewController.h"
 
 @interface SecondWeexViewController ()
-
+@property (nonatomic, strong) UIView *weexView;
 @end
 
 @implementation SecondWeexViewController
@@ -17,21 +17,33 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+
+    CGFloat width = self.view.frame.size.width;
+    CGFloat weexHeight = self.view.frame.size.height - 64;
+
     _instance = [[WXSDKInstance alloc] init];
     _instance.viewController = self;
-    _instance.frame = self.view.frame;
-    
+    _instance.frame = CGRectMake(self.view.frame.size.width-width, 0, width, weexHeight);
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {
         NSLog(@"%@",view);
-        //        [weakSelf.weexView removeFromSuperview];
-        [weakSelf.view addSubview:view];
+        [weakSelf.weexView removeFromSuperview];
+        weakSelf.weexView = view;
+        [weakSelf.view addSubview:weakSelf.weexView];
     };
     
     _instance.onFailed = ^(NSError *error) {
         NSLog(@"%@",error);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:error delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
+        if ([[error domain] isEqualToString:@"1"]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSMutableString *errMsg=[NSMutableString new];
+                [errMsg appendFormat:@"ErrorType:%@\n",[error domain]];
+                [errMsg appendFormat:@"ErrorCode:%ld\n",(long)[error code]];
+                [errMsg appendFormat:@"ErrorInfo:%@\n", [error userInfo]];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误提示" message:errMsg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                [alert show];
+            });
+        };
         //process failure
     };
     
@@ -39,7 +51,7 @@
         NSLog(@"%@",view);
         //process renderFinish
     };
-    NSURL *url = [NSURL URLWithString:self.url];
+    NSURL *url = [NSURL URLWithString:@"http://192.168.199.141:12580/dist/lLogin/index.js"];
     [_instance renderWithURL:url options:@{@"bundleUrl":[url absoluteString]} data:nil];
 
 }

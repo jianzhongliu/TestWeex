@@ -40,7 +40,7 @@
     ViewController *controller = [[ViewController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
-//    nav.navigationBar.translucent = NO;
+    nav.navigationBar.translucent = NO;
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     return YES;
